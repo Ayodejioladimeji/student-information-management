@@ -46,6 +46,10 @@ npm install
 # or
 yarn install
 ```
+4 - Environment Variable
+```bash
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+```
 
 ### Running the application
 1 - Start the development server  
