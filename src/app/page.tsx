@@ -1,73 +1,113 @@
-import Image from "next/image";
-import Link from "next/link";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import { Box, Button, Flex, Heading, Input, Stack, Text } from '@chakra-ui/react';
+import { useRouter } from 'next/navigation';
+import { z } from 'zod';
+import Loading from '@/components/ui/loading';
+import cogoToast from '@successtar/cogo-toast';
+
+
+const loginSchema = z.object({
+  email: z.string().email('Enter a valid email'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+
+const LoginPage = () => {
+  const [loginData, setLoginData] = useState({
+    email: '',
+    password: '',
+  });
+
+  const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setLoginData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: '' }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      loginSchema.parse(loginData);
+
+      cogoToast.success('Login successful!');
+      router.push('/students');
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const fieldErrors: Partial<Record<keyof LoginFormData, string>> = {};
+        error.errors.forEach((err) => {
+          const field = err.path[0] as keyof LoginFormData;
+          fieldErrors[field] = err.message;
+        });
+        setErrors(fieldErrors);
+      } else {
+        console.error(error);
+        cogoToast.error('An unexpected error occurred.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <Box p={8} maxW="lg" mx="auto">
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <Link className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-red-400 text-white gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      <Heading fontSize="2xl" marginTop={20}>Miva University</Heading>
+      <Text>Login with any random information</Text>
+
+
+      <form onSubmit={handleSubmit}>
+        <Stack marginTop={10}>
+          <div>
+            <label htmlFor="email">Email</label>
+            <Input
+              id="email"
+              name="email"
+              type="email"
+              value={loginData.email}
+              onChange={handleInputChange}
+            />
+            {errors.email && <Text color="red.500" fontSize="sm">{errors.email}</Text>}
+          </div>
+
+          <div>
+            <label htmlFor="password">Password</label>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              value={loginData.password}
+              onChange={handleInputChange}
+            />
+            {errors.password && <Text color="red.500" fontSize="sm">{errors.password}</Text>}
+          </div>
+
+          <Button
+            type="submit"
+            colorScheme="blue"
+            background="blue"
+            color="white"
+            fontWeight="bold"
+            padding={6}
+            mt={4}
+            disabled={loading}
           >
-            {/* <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            /> */}
-            Deploy now
-          </Link>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {/* <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          /> */}
-          Learn
-        </a>
-      </footer>
-    </div>
+            Login {loading && <Loading />}
+          </Button>
+        </Stack>
+      </form>
+    </Box>
   );
-}
+};
+
+export default LoginPage;

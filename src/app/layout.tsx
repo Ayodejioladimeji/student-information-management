@@ -1,6 +1,7 @@
 import './globals.css';
 import { ReactNode } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
+import { Provider } from "@/components/ui/provider"
+import { StudentProvider } from '@/context/students';
 
 export const metadata = {
   title: 'Student Information System',
@@ -11,9 +12,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body>
-        {/* <ChakraProvider> */}
-          {children}
-        {/* </ChakraProvider> */}
+        <Provider>
+          <StudentProvider>
+            {children}
+          </StudentProvider>
+        </Provider>
       </body>
     </html>
   );
