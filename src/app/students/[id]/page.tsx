@@ -10,8 +10,10 @@ async function getStudent(id: string): Promise<Student | null> {
     return res.json();
 }
 
+
 export default async function StudentDetailPage({ params }: { params: { id: string } }) {
     const student = await getStudent(params.id);
+    // console.log("my params",params.id)
     if (!student) return notFound();
 
     return <StudentDetail student={student} />;
