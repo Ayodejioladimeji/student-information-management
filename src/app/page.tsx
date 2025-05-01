@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Button, Flex, Heading, Input, Stack, Text } from '@chakra-ui/react';
+import { Box, Button, Heading, Input, Stack, Text } from '@chakra-ui/react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
 import Loading from '@/components/ui/loading';
