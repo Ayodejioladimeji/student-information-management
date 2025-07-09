@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-import { Mail, Key, Eye, EyeOff } from 'lucide-react';
+import { Mail, Key, Eye, EyeOff, Lock } from 'lucide-react';
 import Image from 'next/image';
 import cogoToast from '@successtar/cogo-toast';
 
@@ -35,16 +35,21 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
+            
             loginSchema.parse(loginData);
+
+            
             cogoToast.success('Login successful!');
-            router.push('/students');
+            // router.push('/students');
         } catch (error) {
             if (error instanceof z.ZodError) {
                 const fieldErrors: Partial<Record<keyof LoginFormData, string>> = {};
-                error.errors.forEach((err) => {
+
+                for (const err of error.errors) {
                     const field = err.path[0] as keyof LoginFormData;
-                    fieldErrors[field] = err.message;
-                });
+                    if (field) fieldErrors[field] = err.message;
+                }
+
                 setErrors(fieldErrors);
             } else {
                 console.error(error);
@@ -55,57 +60,67 @@ export default function LoginPage() {
         }
     };
 
+    // 
+
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 py-12 px-4">
-            <div className="mb-8">
-                <Image
-                    src="https://miva-university.s3.eu-west-2.amazonaws.com/wp-content/uploads/2023/05/15101916/miva-mobile-logo.png"
-                    width={100}
-                    height={100}
-                    alt="Miva Logo"
-                    priority
-                />
+        <div className="flex flex-col items-center justify-center">
+            <div className="bg-gray-800 h-[300px] w-full pt-20">
+                <h1 className="text-3xl md:text-4xl font-bold text-center text-white px-4">
+                    Provide account information
+                </h1>
             </div>
-            <div className="w-full max-w-md py-8 px-8 bg-gray-800 shadow-lg rounded-lg">
+
+            <div className="w-full max-w-md py-8 px-8 -mt-20 bg-white shadow-lg rounded-lg">
                 <div className="space-y-6">
-                    <div className="flex flex-col items-center space-y-2">
-                        <h2 className="text-2xl font-bold text-center text-white">
-                            Sign in to your account
-                        </h2>
-                        <p className="text-sm text-gray-400 text-center">
-                            Student Management System
-                        </p>
+
+                    <div className="mb-8 flex justify-center">
+                        <Image
+                            src="/assets/miva-logo.png"
+                            width={100}
+                            height={100}
+                            alt="Miva Logo"
+                            priority
+                        />
                     </div>
 
+                    <h2 className="text-2xl font-bold text-center">
+                        Sign in to your account
+                    </h2>
+
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        {/* Email Field */}
-                        <div>
+                        
+                        <div className="mb-4">
                             <label htmlFor="email" className="sr-only">Email address</label>
-                            <div className="relative">
+
+                            <div className="relative h-12">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <Mail className="text-gray-400 w-5 h-5" />
                                 </div>
                                 <input
-                                    type="email"
+                                    type="text"
                                     id="email"
                                     name="email"
                                     placeholder="Email address"
                                     value={loginData.email}
                                     onChange={handleInputChange}
-                                    className="w-full pl-10 pr-3 py-2 border border-gray-600 bg-gray-700 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full h-full pl-10 pr-3 bg-white text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
-                                {errors.email && (
-                                    <p className="text-red-400 text-sm mt-1">{errors.email}</p>
-                                )}
                             </div>
+
+                            {/* Error below input box */}
+                            {errors.email && (
+                                <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                            )}
                         </div>
 
-                        {/* Password Field */}
-                        <div>
+
+                        {/* Password Input */}
+                        <div className="mb-4">
                             <label htmlFor="password" className="sr-only">Password</label>
-                            <div className="relative">
+
+                            <div className="relative h-12">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <Key className="text-gray-400 w-5 h-5" />
+                                    <Lock className="text-gray-400 w-5 h-5" />
                                 </div>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -114,33 +129,34 @@ export default function LoginPage() {
                                     placeholder="Password"
                                     value={loginData.password}
                                     onChange={handleInputChange}
-                                    className="w-full pl-10 pr-10 py-2 border border-gray-600 bg-gray-700 rounded-md text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full h-full pl-10 pr-10 bg-white text-gray-900 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-300 focus:outline-none"
+                                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                                     aria-label={showPassword ? "Hide password" : "Show password"}
                                 >
                                     {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                 </button>
-                                {errors.password && (
-                                    <p className="text-red-400 text-sm mt-1">{errors.password}</p>
-                                )}
                             </div>
+
+                            {errors.password && (
+                                <p className="text-red-500 text-sm mt-1">{errors.password}</p>
+                            )}
                         </div>
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full flex justify-center py-2 px-4 rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mt-4"
+                            className="w-full flex justify-center py-3 px-4 rounded-md shadow-sm text-white bg-gray-800 hover:bg-red-500 mt-4 cursor-pointer"
                         >
                             {loading ? "Signing in..." : "Sign in"}
                         </button>
                     </form>
 
                     <p className="text-sm text-center text-gray-400 mt-4">
-                        * Demo credentials: <span className="font-bold">admin@example.com / password@123</span> *
+                        Login info: <span className="font-bold">user@example.com - user@1234</span>
                     </p>
                 </div>
             </div>
