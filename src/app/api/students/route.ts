@@ -1,20 +1,23 @@
+// app/api/students/route.ts
 import { NextResponse } from 'next/server';
-import { addStudent, getStudents } from '@/lib/data';
-import { v4 as uuidv4 } from 'uuid';
+import { readData, writeData } from '@/utils';
 
 export async function GET() {
-    return NextResponse.json(getStudents());
+    const students = readData();
+    return NextResponse.json(students);
 }
 
 export async function POST(req: Request) {
-    const data = await req.json()
+    const body = await req.json();
+    const students = readData();
 
     const newStudent = {
-        ...data,
-        id: uuidv4(),
-        gpa: parseFloat(data.gpa),
-    }
+        id: Date.now().toString(),
+        ...body,
+    };
 
-    addStudent(newStudent)
-    return NextResponse.json({ message: 'successful' }, { status: 201 })
+    students.push(newStudent);
+    writeData(students);
+
+    return NextResponse.json(newStudent, { status: 201 });
 }

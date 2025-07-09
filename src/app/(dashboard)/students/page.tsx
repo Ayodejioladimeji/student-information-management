@@ -1,9 +1,18 @@
 'use client';
 
+import { getAllStudents } from '@/services/student-service';
 import { Eye, Pencil, Search } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function Students() {
+    const [students, setStudents] = useState([]);
+
+    useEffect(() => {
+        getAllStudents().then(setStudents);
+    }, []);
+
+    // 
     return (
         <div className="min-h-screen px-6 py-6 space-y-6">
             {/* Header */}
