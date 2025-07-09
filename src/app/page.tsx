@@ -1,113 +1,39 @@
-'use client';
-
-import { useState } from 'react';
-import { Box, Button, Heading, Input, Stack, Text } from '@chakra-ui/react';
-import { useRouter } from 'next/navigation';
-import { z } from 'zod';
-import Loading from '@/components/ui/loading';
-import cogoToast from '@successtar/cogo-toast';
+import TopBar from '@/components/layout/topbar'
+import React from 'react'
 
 
-const loginSchema = z.object({
-  email: z.string().email('Enter a valid email'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
-
-const LoginPage = () => {
-  const [loginData, setLoginData] = useState({
-    email: '',
-    password: '',
-  });
-
-  const [errors, setErrors] = useState<Partial<Record<keyof LoginFormData, string>>>({});
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setLoginData((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: '' }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      loginSchema.parse(loginData);
-
-      cogoToast.success('Login successful!');
-      router.push('/students');
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        const fieldErrors: Partial<Record<keyof LoginFormData, string>> = {};
-        error.errors.forEach((err) => {
-          const field = err.path[0] as keyof LoginFormData;
-          fieldErrors[field] = err.message;
-        });
-        setErrors(fieldErrors);
-      } else {
-        console.error(error);
-        cogoToast.error('An unexpected error occurred.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // 
-
-  return (
-    <Box p={8} maxW="lg" mx="auto">
-
-      <Heading fontSize="2xl" marginTop={20}>Miva University</Heading>
-      <Text>Login with any random information</Text>
-
-
-      <form onSubmit={handleSubmit}>
-        <Stack marginTop={10}>
-          <div>
-            <label htmlFor="email">Email</label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={loginData.email}
-              onChange={handleInputChange}
-            />
-            {errors.email && <Text color="red.500" fontSize="sm">{errors.email}</Text>}
+const Page = () => {
+  return(
+    <section>
+      <TopBar/>
+      <div className="h-[calc(100vh-64px)] flex flex-col md:flex-row">
+        {/* Left Section: Text */}
+        <div className="md:w-1/2 w-full flex items-center justify-center py-30 md:p-8 text-center md:text-left bg-gray-50">
+          <div className="space-y-6 max-w-xl xl:pl-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800">
+              <span className="text-red-500">Miva</span> Student <span className="text-red-500">Management</span> Portal
+            </h1>
+            <p className="text-lg text-gray-600">
+              Get in touch with an Application specialist to get more information about the Miva University application process.
+            </p>
+            <button className="bg-red-500 text-white rounded-md py-3 px-6 hover:bg-red-600 transition cursor-pointer">
+              Learn More
+            </button>
           </div>
+        </div>
 
-          <div>
-            <label htmlFor="password">Password</label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              value={loginData.password}
-              onChange={handleInputChange}
-            />
-            {errors.password && <Text color="red.500" fontSize="sm">{errors.password}</Text>}
-          </div>
+        {/* Right Section: Image */}
+        <div className="md:w-1/2 w-full">
+          <img
+            src="https://miva-university.s3.eu-west-2.amazonaws.com/wp-content/uploads/2024/10/23161858/image-12.jpg"
+            alt="miva-image"
+            className="w-full h-[500px] md:h-full object-cover"
+          />
+        </div>
+      </div>
 
-          <Button
-            type="submit"
-            colorScheme="blue"
-            background="blue"
-            color="white"
-            fontWeight="bold"
-            padding={6}
-            mt={4}
-            disabled={loading}
-          >
-            Login {loading && <Loading />}
-          </Button>
-        </Stack>
-      </form>
-    </Box>
-  );
-};
+    </section>
+  )
+}
 
-export default LoginPage;
+export default Page

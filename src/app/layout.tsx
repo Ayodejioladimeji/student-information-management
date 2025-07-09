@@ -1,5 +1,4 @@
 import './globals.css';
-import { ReactNode } from 'react';
 import { Provider } from "@/components/ui/provider"
 import { StudentProvider } from '@/context/students';
 
@@ -8,9 +7,13 @@ export const metadata = {
   description: 'Manage student records - Miva Test',
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
         <Provider>
           <StudentProvider>
