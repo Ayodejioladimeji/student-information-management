@@ -20,15 +20,18 @@ export default function Students() {
     const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
-        getAllStudents().then(setStudents);
-        setLoading(false)
-    }, []);
+        const getStudents = async() => {
+            const res = await getAllStudents();
+            if(res){
+                setStudents(res || []);      
+            }
 
-    useEffect(() => {
-        getAllStudents().then((data) => {
-            setStudents(data || []);
-            setLoading(false);
-        });
+            // slow it down a bit to show the loader
+            setTimeout(() => {
+                setLoading(false);
+            }, 300)
+        }
+        getStudents()
     }, []);
 
     // client side filtering/pagination
@@ -164,12 +167,13 @@ export default function Students() {
             </div>
                 {/* Pagination */}
                 <div className="flex justify-center items-center text-sm pt-4">
-                    <Paginate
+                   {!loading &&  
+                   <Paginate
                         currentPage={currentPage}
                         totalCount={totalCount}
                         pageSize={pageSize}
                         onPageChange={handlePageChange}
-                    />
+                    />}
                 </div>
         </div>
     );

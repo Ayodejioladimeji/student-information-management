@@ -16,7 +16,7 @@ export async function POST(req: Request) {
         ...body,
     };
 
-    students.push(newStudent);
+    students.unshift(newStudent);
     writeData(students);
 
     return NextResponse.json(newStudent, { status: 201 });

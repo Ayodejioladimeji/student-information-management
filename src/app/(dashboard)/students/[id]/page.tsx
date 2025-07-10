@@ -43,7 +43,7 @@ export default function StudentDetails() {
         <div className="min-h-screen px-6 py-8">
             <div className="mx-auto space-y-6">
                 {/* Header */}
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap gap-5 items-center justify-between">
                     <div className="flex items-center gap-2">
                         <button
                             type="button"
@@ -55,7 +55,7 @@ export default function StudentDetails() {
                         <h2 className="text-lg md:text-2xl font-semibold text-gray-900">Student Details</h2>
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 sm:mt-0">
                         <button
                             onClick={() => router.push(`/students/${id}/edit`)}
                             className="flex items-center gap-1 px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 text-sm cursor-pointer">
@@ -79,7 +79,7 @@ export default function StudentDetails() {
                             <Loader />
                         </div>
                         :
-                        <>
+                        <div className="overflow-x-auto">
                             <div className="flex items-center gap-4 mb-10">
                                 <div className="flex-shrink-0 h-20 w-20 rounded-lg bg-gray-200 flex items-center justify-center text-3xl font-bold text-gray-600">
                                     {student.name
@@ -98,10 +98,10 @@ export default function StudentDetails() {
                                 </div>
                             </div>
 
-                            <table className="w-full max-w-[500px] text-sm text-left text-gray-800 border border-gray-200 rounded-lg overflow-hidden">
+                            <table className="w-[500px] sm:max-w-[500px] text-sm text-left text-gray-800 border border-gray-200 rounded-lg overflow-hidden">
                                 <tbody className="divide-y divide-gray-200 bg-white">
                                     <tr>
-                                        <th className="p-2 font-medium text-gray-700 bg-gray-50 w-1/3">Registration Number</th>
+                                        <th className="p-2 font-medium text-gray-700 bg-gray-50">Registration Number</th>
                                         <td className="p-2">{student.registrationNumber}</td>
                                     </tr>
                                     <tr>
@@ -129,7 +129,7 @@ export default function StudentDetails() {
                                     </tr>
                                 </tbody>
                             </table>
-                        </>}
+                        </div>}
                 </div>
             </div>
 

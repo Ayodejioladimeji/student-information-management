@@ -18,7 +18,11 @@ export default function Dashboard() {
 
     useEffect(() => {
         getAllStudents().then(setStudents);
-        setLoading(false)
+        
+        // slow it down a bit to show the loader
+        setTimeout(() => {
+            setLoading(false)
+        },300)
     }, []);
 
     // client side filtering
