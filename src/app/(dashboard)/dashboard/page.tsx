@@ -89,14 +89,14 @@ export default function Dashboard() {
 
                 {/* Table */}
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm text-gray-800">
+                    <table className="w-[1000px] lg:w-full text-left text-sm text-gray-800">
                         <thead>
                             <tr className="border-b border-t border-gray-300">
                                 <th className="p-3">Name</th>
                                 <th className="p-3">Reg No</th>
                                 <th className="p-3">Major</th>
                                 <th className="p-3">GPA</th>
-                                <th className="p-3">Courses</th>
+                                <th className="p-3">Date of Birth</th>
                                 <th className="p-3">Actions</th>
                             </tr>
                         </thead>

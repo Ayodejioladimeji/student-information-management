@@ -13,6 +13,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@successtar/cogo-toast": "^5.0.6",
+    "classnames": "^2.5.1",
     "framer-motion": "^12.9.2",
     "init": "^0.1.2",
     "lucide-react": "^0.525.0",

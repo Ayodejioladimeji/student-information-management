@@ -50,7 +50,7 @@ export default function Sidebar({openSidebar, setOpenSidebar}: SidebarProps) {
             <X className='flex lg:hidden absolute right-[15px]' onClick={() => setOpenSidebar(false)} />
 
             {/* Navigation */}
-            <nav className="flex flex-col gap-1">
+            <nav className="flex flex-col gap-1" onClick={() => setOpenSidebar(false)} >
                 {navItems.map((item) => {
                     const isActive = pathname.includes(item.href);
                     return (

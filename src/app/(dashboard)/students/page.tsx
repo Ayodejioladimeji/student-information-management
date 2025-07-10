@@ -7,16 +7,38 @@ import { useEffect, useState } from 'react';
 import { Student } from '../../../../types/student';
 import { Loader } from '@/components/ui/loadder';
 import { useRouter } from 'next/navigation';
+import Paginate from '@/components/pagination/Paginate';
 
 export default function Students() {
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true)
     const router = useRouter()
+    const [currentPage, setCurrentPage] = useState(1);
+    const [pageSize] = useState(5);
 
     useEffect(() => {
         getAllStudents().then(setStudents);
         setLoading(false)
     }, []);
+
+    useEffect(() => {
+        getAllStudents().then((data) => {
+            setStudents(data || []);
+            setLoading(false);
+        });
+    }, []);
+
+    // client side pagination
+    const totalCount = students.length;
+    const startIndex = (currentPage - 1) * pageSize;
+    const endIndex = startIndex + pageSize;
+    const currentStudents = students.slice(startIndex, endIndex);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
+
+  
 
     // 
     return (
@@ -47,7 +69,7 @@ export default function Students() {
 
                 {/* Table */}
                 <div className="overflow-x-auto">
-                    <table className="w-full text-left text-sm text-gray-800">
+                    <table className="w-[1000px] lg:w-full text-left text-sm text-gray-800">
                         <thead>
                             <tr className="border-b border-t border-gray-300">
                                 <th className="p-3">Name</th>
@@ -73,7 +95,7 @@ export default function Students() {
                             :
                             <tbody className="divide-y divide-gray-200 bg-white">
 
-                                {students.map((student, i) => (
+                                {currentStudents.map((student, i) => (
                                     <tr key={i} className="hover:bg-gray-50">
                                         <td className="flex items-center gap-3 p-3">
                                             <div className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-gray-600 font-bold 
@@ -120,7 +142,7 @@ export default function Students() {
                                     </tr>
                                 ))}
 
-                                {!loading && students?.length === 0 &&
+                                {!loading && currentStudents?.length === 0 &&
                                     <tr>
                                         <td colSpan={6} className="py-6 text-center text-gray-500">
                                             No students data available
@@ -131,11 +153,16 @@ export default function Students() {
                     </table>
                 </div>
 
-                {/* Pagination */}
-                <div className="flex justify-between items-center text-sm pt-4">
-
-                </div>
             </div>
+                {/* Pagination */}
+                <div className="flex justify-center items-center text-sm pt-4">
+                    <Paginate
+                        currentPage={currentPage}
+                        totalCount={totalCount}
+                        pageSize={pageSize}
+                        onPageChange={handlePageChange}
+                    />
+                </div>
         </div>
     );
 }

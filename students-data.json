@@ -16,5 +16,50 @@
     "major": "Business Admin",
     "dateOfBirth": "2025-07-25",
     "gpa": 2
+  },
+  {
+    "id": "1752148830855",
+    "name": "Johnson Abolade",
+    "email": "johnson@mailinator.com",
+    "registrationNumber": "23984739284793824",
+    "major": "Mathematics",
+    "dateOfBirth": "2025-07-25",
+    "gpa": 2
+  },
+  {
+    "id": "1752150054333",
+    "name": "Susan Crosby",
+    "email": "suhaxadidi@mailinator.com",
+    "registrationNumber": "91",
+    "major": "Computer Science",
+    "dateOfBirth": "2015-08-28",
+    "gpa": 1.9
+  },
+  {
+    "id": "1752150067141",
+    "name": "Stephanie Stout",
+    "email": "xenebyp@mailinator.com",
+    "registrationNumber": "433",
+    "major": "Law",
+    "dateOfBirth": "1975-11-21",
+    "gpa": 2.2
+  },
+  {
+    "id": "1752150085829",
+    "name": "Joan Emerson",
+    "email": "bubalomeca@mailinator.com",
+    "registrationNumber": "489",
+    "major": "Psychology",
+    "dateOfBirth": "2013-01-17",
+    "gpa": 3.5
+  },
+  {
+    "id": "1752150157558",
+    "name": "Howard Solomon",
+    "email": "jijize@mailinator.com",
+    "registrationNumber": "439",
+    "major": "Business Admin",
+    "dateOfBirth": "2015-02-17",
+    "gpa": 4
   }
 ]
