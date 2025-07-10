@@ -6,6 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Student } from "../../../../../types/student";
 import { getStudentById } from "@/services/student-service";
+import { Loader } from "@/components/ui/loadder";
 
 
 const initialData = {
@@ -23,7 +24,7 @@ export default function StudentDetails() {
     const [deleteModal, setDeleteModal] = useState(false)
     const [student, setStudent] = useState<Student>(initialData)
     const { id } = useParams()
-    const [loading, setLoading]= useState(true)
+    const [loading, setLoading] = useState(true)
 
     // get single student info
     useEffect(() => {
@@ -73,56 +74,62 @@ export default function StudentDetails() {
 
                 {/* Main Card */}
                 <div className="bg-white rounded-lg border border-gray-300 p-4 md:p-6">
-                    <div className="flex items-center gap-4 mb-10">
-                        <div className="flex-shrink-0 h-20 w-20 rounded-lg bg-gray-200 flex items-center justify-center text-3xl font-bold text-gray-600">
-                            {student.name
-                                .split(" ")
-                                .map(word => word[0]?.toUpperCase())
-                                .join("")}
+                    {loading ?
+                        <div className="flex justify-center py-20">
+                            <Loader />
                         </div>
+                        :
+                        <>
+                            <div className="flex items-center gap-4 mb-10">
+                                <div className="flex-shrink-0 h-20 w-20 rounded-lg bg-gray-200 flex items-center justify-center text-3xl font-bold text-gray-600">
+                                    {student.name
+                                        .split(" ")
+                                        .map(word => word[0]?.toUpperCase())
+                                        .join("")}
+                                </div>
 
-                        <div className="flex flex-col">
-                            <h3 className="text-xl font-semibold text-gray-900">{student.name}</h3>
+                                <div className="flex flex-col">
+                                    <h3 className="text-xl font-semibold text-gray-900">{student.name}</h3>
 
-                            <div className="flex items-center gap-1 text-sm text-gray-600">
-                                <Mail className="w-4 h-4" />
-                                {student.email}
+                                    <div className="flex items-center gap-1 text-sm text-gray-600">
+                                        <Mail className="w-4 h-4" />
+                                        {student.email}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <table className="w-full max-w-[500px] text-sm text-left text-gray-800 border border-gray-200 rounded-lg overflow-hidden">
-                        <tbody className="divide-y divide-gray-200 bg-white">
-                            <tr>
-                                <th className="p-2 font-medium text-gray-700 bg-gray-50 w-1/3">Registration Number</th>
-                                <td className="p-2">{student.registrationNumber}</td>
-                            </tr>
-                            <tr>
-                                <th className="p-2 font-medium text-gray-700 bg-gray-50">Date of Birth</th>
-                                <td className="p-2 flex items-center gap-1">
-                                    <Calendar className="w-4 h-4 text-gray-500" />
-                                    {student.dateOfBirth}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th className="p-2 font-medium text-gray-700 bg-gray-50">Major</th>
-                                <td className="p-2">{student.major}</td>
-                            </tr>
-                            <tr>
-                                <th className="p-2 font-medium text-gray-700 bg-gray-50">GPA</th>
-                                <td className="p-2">
-                                    <span
-                                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${student.gpa < 2
-                                            ? "bg-yellow-100 text-yellow-800"
-                                            : "bg-amber-100 text-amber-800"}`}
-                                    >
-                                        {student.gpa.toFixed(1)}
-                                    </span>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
+                            <table className="w-full max-w-[500px] text-sm text-left text-gray-800 border border-gray-200 rounded-lg overflow-hidden">
+                                <tbody className="divide-y divide-gray-200 bg-white">
+                                    <tr>
+                                        <th className="p-2 font-medium text-gray-700 bg-gray-50 w-1/3">Registration Number</th>
+                                        <td className="p-2">{student.registrationNumber}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="p-2 font-medium text-gray-700 bg-gray-50">Date of Birth</th>
+                                        <td className="p-2 flex items-center gap-1">
+                                            <Calendar className="w-4 h-4 text-gray-500" />
+                                            {student.dateOfBirth}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th className="p-2 font-medium text-gray-700 bg-gray-50">Major</th>
+                                        <td className="p-2">{student.major}</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="p-2 font-medium text-gray-700 bg-gray-50">GPA</th>
+                                        <td className="p-2">
+                                            <span
+                                                className={`inline-block px-2 py-0.5 rounded-full text-xs font-semibold ${student.gpa < 2
+                                                    ? "bg-yellow-100 text-yellow-800"
+                                                    : "bg-amber-100 text-amber-800"}`}
+                                            >
+                                                {student.gpa.toFixed(1)}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </>}
                 </div>
             </div>
 

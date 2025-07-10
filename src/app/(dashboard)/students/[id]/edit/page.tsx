@@ -2,20 +2,23 @@
 
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import cogoToast from '@successtar/cogo-toast';
 import { ArrowLeft, Save, X } from 'lucide-react';
+import { getStudentById, updateStudent } from '@/services/student-service';
+import { Loader } from '@/components/ui/loadder';
 
 const formSchema = z.object({
     name: z.string().min(1, 'Name is required'),
     email: z.string().email('Enter a valid email'),
-    regNo: z.string().min(1, 'Registration number is required'),
+    registrationNumber: z.string().min(1, 'Registration number is required'),
     major: z.string().min(1, 'Major is required'),
-    dob: z.string().min(1, 'Date of birth is required'),
-    gpa: z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0 && Number(val) <= 4, {
-        message: 'GPA must be between 0 and 4',
-    }),
+    dateOfBirth: z.string().min(1, 'Date of birth is required'),
+    gpa: z.coerce
+        .number()
+        .min(0, 'GPA must be at least 0')
+        .max(4, 'GPA cannot be more than 4'),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -26,9 +29,31 @@ export default function EditStudentPage() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
-
     const { register, handleSubmit, reset } = useForm<FormData>();
+    const { id } = useParams()
+    const [buttonLoading, setButtonLoading] = useState(false)
 
+    // get single student info
+    useEffect(() => {
+        const getStudent = async () => {
+            setLoading(true);
+            const res = await getStudentById(id as string);
+            if (res) {
+                reset({
+                    name: res.name,
+                    email: res.email,
+                    registrationNumber: res.registrationNumber,
+                    major: res.major,
+                    dateOfBirth: res.dateOfBirth,
+                    gpa: res.gpa,
+                });
+            }
+            setLoading(false);
+        };
+        getStudent();
+    }, [id, reset]);
+
+    // onEditing student info
     const onSubmit = async (data: FormData) => {
         const validation = formSchema.safeParse(data);
         if (!validation.success) {
@@ -41,22 +66,13 @@ export default function EditStudentPage() {
             return;
         }
 
-        try {
-            setLoading(true);
-            const res = await fetch('/api/students', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(validation.data),
-            });
-
-            if (!res.ok) throw new Error('Failed to add student');
-            cogoToast.success('Student added successfully!');
-            router.push('/dashboard');
-        } catch {
-            cogoToast.error('Error adding student. Try again.');
-        } finally {
-            setLoading(false);
+        setButtonLoading(true);
+        const res = await updateStudent(id as string, validation?.data)
+        if (res) {
+            router.push('/students');
+            cogoToast.success('Student updated successfully!');
         }
+        setButtonLoading(false)
     };
 
     return (
@@ -72,102 +88,108 @@ export default function EditStudentPage() {
                 Edit Student Information
             </h1>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Name */}
-                <div>
-                    <label className="block mb-1 font-medium">
-                        Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        {...register('name')}
-                        className="w-full p-3 rounded border border-gray-300"
-                    />
-                    {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+            {loading ?
+                <div className="flex justify-center py-10">
+                    <Loader />
                 </div>
+                :
+                <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Name */}
+                    <div>
+                        <label className="block mb-1 font-medium">
+                            Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            {...register('name')}
+                            className="w-full p-3 rounded border border-gray-300"
+                        />
+                        {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                    </div>
 
-                {/* Email */}
-                <div>
-                    <label className="block mb-1 font-medium">
-                        Email <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="email"
-                        {...register('email')}
-                        className="w-full p-3 rounded border border-gray-300"
-                    />
-                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                </div>
+                    {/* Email */}
+                    <div>
+                        <label className="block mb-1 font-medium">
+                            Email <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="email"
+                            {...register('email')}
+                            className="w-full p-3 rounded border border-gray-300"
+                        />
+                        {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                    </div>
 
-                {/* Reg No */}
-                <div>
-                    <label className="block mb-1 font-medium">
-                        Registration Number <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        {...register('regNo')}
-                        className="w-full p-3 rounded border border-gray-300"
-                    />
-                    {errors.regNo && <p className="text-red-500 text-sm mt-1">{errors.regNo}</p>}
-                </div>
+                    {/* Reg No */}
+                    <div>
+                        <label className="block mb-1 font-medium">
+                            Registration Number <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            {...register('registrationNumber')}
+                            className="w-full p-3 rounded border border-gray-300"
+                        />
+                        {errors.registrationNumber && <p className="text-red-500 text-sm mt-1">{errors.registrationNumber}</p>}
+                    </div>
 
-                {/* Major */}
-                <div>
-                    <label className="block mb-1 font-medium">
-                        Major <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                        {...register('major')}
-                        className="w-full p-3 rounded border border-gray-300 bg-white"
-                    >
-                        <option value="">Select a major</option>
-                        {majors.map((major, i) => (
-                            <option key={i} value={major}>
-                                {major}
-                            </option>
-                        ))}
-                    </select>
-                    {errors.major && <p className="text-red-500 text-sm mt-1">{errors.major}</p>}
-                </div>
+                    {/* Major */}
+                    <div>
+                        <label className="block mb-1 font-medium">
+                            Major <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                            {...register('major')}
+                            className="w-full p-3 rounded border border-gray-300 bg-white"
+                        >
+                            <option value="">Select a major</option>
+                            {majors.map((major, i) => (
+                                <option key={i} value={major}>
+                                    {major}
+                                </option>
+                            ))}
+                        </select>
+                        {errors.major && <p className="text-red-500 text-sm mt-1">{errors.major}</p>}
+                    </div>
 
-                {/* Date of Birth */}
-                <div>
-                    <label className="block mb-1 font-medium">
-                        Date of Birth <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="date"
-                        {...register('dob')}
-                        className="w-full p-3 rounded border border-gray-300"
-                    />
-                    {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob}</p>}
-                </div>
+                    {/* Date of Birth */}
+                    <div>
+                        <label className="block mb-1 font-medium">
+                            Date of Birth <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="date"
+                            {...register('dateOfBirth')}
+                            className="w-full p-3 rounded border border-gray-300"
+                        />
+                        {errors.dateOfBirth && <p className="text-red-500 text-sm mt-1">{errors.dateOfBirth}</p>}
+                    </div>
 
-                {/* GPA */}
-                <div>
-                    <label className="block mb-1 font-medium">
-                        GPA <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        {...register('gpa')}
-                        className="w-full p-3 rounded border border-gray-300"
-                    />
-                    {errors.gpa && <p className="text-red-500 text-sm mt-1">{errors.gpa}</p>}
-                </div>
+                    {/* GPA */}
+                    <div>
+                        <label className="block mb-1 font-medium">
+                            GPA <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="number"
+                            step="0.01"
+                            {...register('gpa')}
+                            className="w-full p-3 rounded border border-gray-300"
+                        />
+                        {errors.gpa && <p className="text-red-500 text-sm mt-1">{errors.gpa}</p>}
+                    </div>
 
-                <div className="col-span-1 md:col-span-2 flex justify-end gap-4 mt-4">
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="bg-gray-800 text-white rounded px-5 py-3 text-sm flex items-center gap-2 hover:bg-red-500 transition cursor-pointer"
-                    >
-                        <Save size={16} /> {loading ? 'Updating...' : 'Update Student'}
-                    </button>
-                </div>
-            </form>
+                    <div className="col-span-1 md:col-span-2 flex justify-end gap-4 mt-4">
+                        <button
+                            type="submit"
+                            disabled={buttonLoading}
+                            className="bg-gray-800 text-white rounded px-5 py-3 text-sm flex items-center gap-2 hover:bg-red-500 transition cursor-pointer"
+                        >
+                            <Save size={16} /> {buttonLoading ? 'Updating...' : 'Update Student'}
+                        </button>
+                    </div>
+                </form>
+            }
         </div>
     );
 }

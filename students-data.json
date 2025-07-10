@@ -4,7 +4,7 @@
     "name": "Ayodeji Oladimeji",
     "email": "ayodeji@mailinator.com",
     "registrationNumber": "4756565",
-    "major": "Computer Science",
+    "major": "Mathematics",
     "dateOfBirth": "2025-07-23",
     "gpa": 3.4
   },
@@ -13,8 +13,17 @@
     "name": "Random user",
     "email": "john@mailinator.com",
     "registrationNumber": "324343",
-    "major": "Psychology",
+    "major": "Mathematics",
     "dateOfBirth": "2025-07-30",
     "gpa": 3
+  },
+  {
+    "id": "1752110968685",
+    "name": "Ayodeji Oladimeji",
+    "email": "ayodeji@mailinator.com",
+    "registrationNumber": "4756565",
+    "major": "Computer Science",
+    "dateOfBirth": "2025-07-23",
+    "gpa": 3.4
   }
 ]
