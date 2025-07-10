@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
+
 const dataFilePath = path.join(process.cwd(), 'students-data.json');
 
 export function readData() {

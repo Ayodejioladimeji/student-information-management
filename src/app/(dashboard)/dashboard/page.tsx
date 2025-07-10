@@ -7,16 +7,22 @@ import { useEffect, useState } from 'react';
 import { Student } from '../../../../types/student';
 import { getAllStudents } from '@/services/student-service';
 import { Loader } from '@/components/ui/loadder';
+import { filterStudents } from '@/utils/filter';
+
 
 export default function Dashboard() {
     const [students, setStudents] = useState<Student[]>([]);
     const [loading, setLoading] = useState(true)
     const router = useRouter()
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         getAllStudents().then(setStudents);
         setLoading(false)
     }, []);
+
+    // client side filtering
+        const currentStudents = filterStudents(students, searchTerm)
 
     // 
 
@@ -83,6 +89,7 @@ export default function Dashboard() {
                         type="text"
                         placeholder="Search students..."
                         className="w-full border border-gray-300 border border-gray-300-gray-600 rounded px-10 py-2 text-gray-800 placeholder-gray-400 focus:outline-none max-w-[300px]"
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     <Search className="absolute left-3 top-2.5 w-5 h-5" />
                 </div>
@@ -114,7 +121,7 @@ export default function Dashboard() {
                             :
 
                             <tbody className="divide-y divide-gray-200 bg-white">
-                                {students.map((student, i) => (
+                                {currentStudents.slice(0,5).map((student, i) => (
                                     <tr key={i} className="hover:bg-gray-50">
                                         <td className="flex items-center gap-3 p-3">
                                             <div className={`flex-shrink-0 h-10 w-10 rounded-full flex items-center justify-center text-gray-600 font-bold 
@@ -156,7 +163,7 @@ export default function Dashboard() {
                                     </tr>
                                 ))}
 
-                                {!loading && students.length === 0 &&
+                                {!loading && currentStudents.length === 0 &&
                                     <tr>
                                         <td colSpan={6} className="py-6 text-center text-gray-500">
                                             No students data available

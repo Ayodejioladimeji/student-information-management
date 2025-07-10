@@ -8,6 +8,8 @@ import { Student } from '../../../../types/student';
 import { Loader } from '@/components/ui/loadder';
 import { useRouter } from 'next/navigation';
 import Paginate from '@/components/pagination/Paginate';
+import { filterStudents } from '@/utils/filter';
+
 
 export default function Students() {
     const [students, setStudents] = useState<Student[]>([]);
@@ -15,6 +17,7 @@ export default function Students() {
     const router = useRouter()
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize] = useState(5);
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         getAllStudents().then(setStudents);
@@ -28,11 +31,12 @@ export default function Students() {
         });
     }, []);
 
-    // client side pagination
-    const totalCount = students.length;
+    // client side filtering/pagination
+    const filteredStudents = filterStudents(students, searchTerm)
+    const totalCount = filteredStudents.length;
     const startIndex = (currentPage - 1) * pageSize;
     const endIndex = startIndex + pageSize;
-    const currentStudents = students.slice(startIndex, endIndex);
+    const currentStudents = filteredStudents.slice(startIndex, endIndex);
 
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
@@ -63,6 +67,10 @@ export default function Students() {
                         type="text"
                         placeholder="Search students..."
                         className="w-full border border-gray-300 border border-gray-300-gray-600 rounded px-10 py-2 text-gray-800 placeholder-gray-400 focus:outline-none max-w-[300px]"
+                        onChange={(e) => {
+                            setSearchTerm(e.target.value);
+                            setCurrentPage(1);
+                          }}
                     />
                     <Search className="absolute left-3 top-2.5 w-5 h-5" />
                 </div>
