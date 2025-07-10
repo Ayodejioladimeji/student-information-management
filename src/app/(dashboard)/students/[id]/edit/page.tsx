@@ -77,7 +77,7 @@ export default function EditStudentPage() {
 
     return (
         <div className="bg-white text-gray-900 px-6 py-10 min-h-screen">
-            <h1 className="font-bold text-2xl flex items-center gap-3 mb-20">
+            <h1 className="font-bold text-2xl flex flex-wrap items-center gap-3 mb-20">
                 <button
                     type="button"
                     className="cursor-pointer rounded-full w-8 h-8 bg-gray-200 flex items-center justify-center"

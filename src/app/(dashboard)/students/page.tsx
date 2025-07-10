@@ -51,7 +51,7 @@ export default function Students() {
     return (
         <div className="min-h-screen px-6 py-6 space-y-6">
             {/* Header */}
-            <div className="flex justify-between items-center">
+            <div className="flex flex-wrap gap-5 justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold">All Students</h1>
                 </div>
