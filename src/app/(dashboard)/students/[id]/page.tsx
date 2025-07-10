@@ -1,24 +1,41 @@
 "use client";
 
 import DeleteStudentModal from "@/components/layout/modals/delete-students-modal";
-import { ArrowLeft, Pencil, Trash2, Calendar, Mail, BookOpen } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { ArrowLeft, Pencil, Trash2, Calendar, Mail } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Student } from "../../../../../types/student";
+import { getStudentById } from "@/services/student-service";
+
+
+const initialData = {
+    id: '',
+    name: '',
+    email: '',
+    registrationNumber: '',
+    major: '',
+    dateOfBirth: '',
+    gpa: 0,
+}
 
 export default function StudentDetails() {
     const router = useRouter()
     const [deleteModal, setDeleteModal] = useState(false)
+    const [student, setStudent] = useState<Student>(initialData)
+    const { id } = useParams()
+    const [loading, setLoading]= useState(true)
 
-    const student = {
-        name: "First user",
-        email: "user@mailinator.com",
-        regNo: "4756565",
-        major: "Mathematics",
-        gpa: 2.5,
-        dob: "7/12/2025",
-        courses: 0,
-    };
-
+    // get single student info
+    useEffect(() => {
+        const getStudent = async () => {
+            const res = await getStudentById(id as string)
+            if (res) {
+                setStudent(res)
+            }
+            setLoading(false)
+        }
+        getStudent()
+    }, [])
     // 
 
     return (
@@ -78,13 +95,13 @@ export default function StudentDetails() {
                         <tbody className="divide-y divide-gray-200 bg-white">
                             <tr>
                                 <th className="p-2 font-medium text-gray-700 bg-gray-50 w-1/3">Registration Number</th>
-                                <td className="p-2">{student.regNo}</td>
+                                <td className="p-2">{student.registrationNumber}</td>
                             </tr>
                             <tr>
                                 <th className="p-2 font-medium text-gray-700 bg-gray-50">Date of Birth</th>
                                 <td className="p-2 flex items-center gap-1">
                                     <Calendar className="w-4 h-4 text-gray-500" />
-                                    {student.dob}
+                                    {student.dateOfBirth}
                                 </td>
                             </tr>
                             <tr>

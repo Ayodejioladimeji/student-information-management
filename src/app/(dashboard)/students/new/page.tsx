@@ -6,16 +6,18 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import cogoToast from '@successtar/cogo-toast';
 import { ArrowLeft, Save, X } from 'lucide-react';
+import { createStudent } from '@/services/student-service';
 
 const formSchema = z.object({
     name: z.string().min(1, 'Name is required'),
     email: z.string().email('Enter a valid email'),
-    regNo: z.string().min(1, 'Registration number is required'),
+    registrationNumber: z.string().min(1, 'Registration number is required'),
     major: z.string().min(1, 'Major is required'),
-    dob: z.string().min(1, 'Date of birth is required'),
-    gpa: z.string().refine(val => !isNaN(Number(val)) && Number(val) >= 0 && Number(val) <= 4, {
-        message: 'GPA must be between 0 and 4',
-    }),
+    dateOfBirth: z.string().min(1, 'Date of birth is required'),
+    gpa: z.coerce
+        .number()
+        .min(0, 'GPA must be at least 0')
+        .max(4, 'GPA cannot be more than 4'),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -41,22 +43,15 @@ export default function AddStudentPage() {
             return;
         }
 
-        try {
             setLoading(true);
-            const res = await fetch('/api/students', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(validation.data),
-            });
-
-            if (!res.ok) throw new Error('Failed to add student');
-            cogoToast.success('Student added successfully!');
-            router.push('/dashboard');
-        } catch {
-            cogoToast.error('Error adding student. Try again.');
-        } finally {
-            setLoading(false);
-        }
+            const res = await createStudent(validation.data);
+            if(res){
+                cogoToast.success('Student added successfully!');
+                router.push('/students');
+            }
+            else{
+                cogoToast.error(res)
+            }
     };
 
     return (
@@ -106,16 +101,16 @@ export default function AddStudentPage() {
                     </label>
                     <input
                         type="text"
-                        {...register('regNo')}
+                        {...register('registrationNumber')}
                         className="w-full p-3 rounded border border-gray-300"
                     />
-                    {errors.regNo && <p className="text-red-500 text-sm mt-1">{errors.regNo}</p>}
+                    {errors.registrationNumber && <p className="text-red-500 text-sm mt-1">{errors.registrationNumber}</p>}
                 </div>
 
                 {/* Major */}
                 <div>
                     <label className="block mb-1 font-medium">
-                        Major <span className="text-red-500">*</span>
+                        Course of Study <span className="text-red-500">*</span>
                     </label>
                     <select
                         {...register('major')}
@@ -138,10 +133,10 @@ export default function AddStudentPage() {
                     </label>
                     <input
                         type="date"
-                        {...register('dob')}
+                        {...register('dateOfBirth')}
                         className="w-full p-3 rounded border border-gray-300"
                     />
-                    {errors.dob && <p className="text-red-500 text-sm mt-1">{errors.dob}</p>}
+                    {errors.dateOfBirth && <p className="text-red-500 text-sm mt-1">{errors.dateOfBirth}</p>}
                 </div>
 
                 {/* GPA */}
@@ -152,6 +147,7 @@ export default function AddStudentPage() {
                     <input
                         type="number"
                         step="0.01"
+                        placeholder='3.5'
                         {...register('gpa')}
                         className="w-full p-3 rounded border border-gray-300"
                     />
