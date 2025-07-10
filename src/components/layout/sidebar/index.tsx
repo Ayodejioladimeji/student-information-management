@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Home, User } from 'lucide-react';
+import { Home, User, X } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { Dispatch, SetStateAction } from "react";
 
@@ -30,7 +30,8 @@ export default function Sidebar({openSidebar, setOpenSidebar}: SidebarProps) {
     const pathname = usePathname();
 
     return (
-        <aside className="bg-white fixed h-screen z-20 w-full max-w-[250px] px-4 py-6 flex flex-col border-r border-gray-200">
+        <aside className={`bg-white fixed h-screen z-20 w-full max-w-[250px] px-4 py-6 flex flex-col border-r border-gray-200 transform transition-transform duration-300 ease-in-out ${openSidebar ? "translate-x-0" : "-translate-x-full"
+        } lg:translate-x-0`}>
             {/* Logo */}
             <div className="mb-8 px-2">
                 <Link href="/">
@@ -44,6 +45,9 @@ export default function Sidebar({openSidebar, setOpenSidebar}: SidebarProps) {
                     />
                 </Link>
             </div>
+
+            {/* close sidebar */}
+            <X className='flex lg:hidden absolute right-[15px]' onClick={() => setOpenSidebar(false)} />
 
             {/* Navigation */}
             <nav className="flex flex-col gap-1">

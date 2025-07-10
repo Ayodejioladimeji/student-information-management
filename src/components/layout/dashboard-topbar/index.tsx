@@ -1,6 +1,6 @@
 'use client';
 
-import { Menu } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import { Dispatch, SetStateAction } from "react";
 
@@ -14,8 +14,8 @@ export default function DashboardTopBar({ openSidebar, setOpenSidebar }: Sidebar
 
     return (
         <header className="w-full sticky top-0 bg-white border-b border-gray-300">
-            <div className="px-4 sm:px-6 h-16 flex items-center justify-between">
-                <Menu/>
+            <div className="relative px-4 sm:px-6 h-16 flex items-center justify-end">
+                <Menu className='flex lg:hidden absolute left-[15px]' onClick={() => setOpenSidebar(true)}/>
 
                 <div className="flex items-center gap-2">
                     <div className="size-10 border rounded-full">
