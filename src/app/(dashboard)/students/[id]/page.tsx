@@ -57,7 +57,7 @@ export default function StudentDetails() {
 
                     <div className="flex gap-2">
                         <button
-                            onClick={() => router.push("/students/1234/edit")}
+                            onClick={() => router.push(`/students/${id}/edit`)}
                             className="flex items-center gap-1 px-3 py-2 rounded border border-gray-300 text-gray-700 hover:bg-gray-100 text-sm cursor-pointer">
                             <Pencil className="w-4 h-4" />
                             Edit
@@ -136,7 +136,7 @@ export default function StudentDetails() {
             {/* Delete user information confirmation modal */}
             {deleteModal &&
                 <DeleteStudentModal
-                    studentName="tolani"
+                    studentName={student.name}
                     deleteModal={deleteModal}
                     setDeleteModal={setDeleteModal}
                 />}

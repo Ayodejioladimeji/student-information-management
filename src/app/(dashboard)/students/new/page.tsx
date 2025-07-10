@@ -47,7 +47,11 @@ export default function AddStudentPage() {
             const res = await createStudent(validation.data);
             if(res){
                 cogoToast.success('Student added successfully!');
-                router.push('/students');
+                
+                // add a delay before routing
+                setTimeout(() => {
+                    router.push('/students');
+                }, 1000)
             }
             else{
                 cogoToast.error(res)

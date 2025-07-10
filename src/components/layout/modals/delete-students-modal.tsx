@@ -1,3 +1,6 @@
+import { deleteStudent } from "@/services/student-service"
+import cogoToast from "@successtar/cogo-toast"
+import { useParams, useRouter } from "next/navigation"
 import React, { Dispatch, SetStateAction, useState } from "react"
 
 interface DeleteProps {
@@ -8,10 +11,18 @@ interface DeleteProps {
 
 const DeleteStudentModal = ({studentName, setDeleteModal}: DeleteProps) => {
     const [isDeleting, setIsDeleting] = useState(false)
+    const {id} = useParams()
+    const router = useRouter()
 
 
-    const handleDelete = () => {
-
+    const handleDelete = async () => {
+        setIsDeleting(true)
+        const res = await deleteStudent(id as string)
+        if(res){
+            cogoToast.success("Data deleted successfully")
+            router.push("/students")
+            setDeleteModal(false)
+        }
     }
 
     // 
