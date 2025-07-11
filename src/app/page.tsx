@@ -8,8 +8,8 @@ const Page = () => {
       <TopBar/>
       <div className="h-[calc(100vh-64px)] flex flex-col md:flex-row">
         {/* Left Section: Text */}
-        <div className="md:w-1/2 w-full flex items-center justify-center py-30 md:p-8 text-center md:text-left bg-gray-50">
-          <div className="space-y-6 max-w-xl xl:pl-6">
+        <div className="md:w-1/2 w-full flex items-center justify-center py-30 text-center md:text-left bg-gray-50">
+          <div className="space-y-6 max-8-xl px-4 lg:px-8">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800">
               <span className="text-red-500">Miva</span> Student <span className="text-red-500">Management</span> Portal
             </h1>

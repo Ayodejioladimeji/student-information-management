@@ -11,7 +11,7 @@ export default function TopBar() {
 
     return (
         <header className="w-full bg-white shadow-md sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+            <div className="max-w-8xl mx-auto px-4 sm:px-6 h-16 flex flex-wrap gap-6 items-center justify-between">
                 <Link href="/">
                         <Image
                             src="/assets/miva-logo.png"
@@ -36,8 +36,9 @@ export default function TopBar() {
                     >
                         Login
                     </Link>}
+
                     <Link href="/auth/signin"
-                        className="bg-red-500 hover:bg-gray-800 text-white font-medium px-6 py-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        className="bg-red-500 hidden sm:flex hover:bg-gray-800 text-white font-medium px-6 py-2 rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     >
                         Register
                     </Link>
