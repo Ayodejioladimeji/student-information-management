@@ -11,6 +11,7 @@ interface SidebarProps {
 
 
 export default function DashboardTopBar({ openSidebar, setOpenSidebar }: SidebarProps) {
+     
 
     return (
         <header className="w-full sticky top-0 bg-white border-b border-gray-300">
