@@ -1,4 +1,3 @@
-// app/api/students/route.ts
 import { NextResponse } from 'next/server';
 import { readData, writeData } from '@/utils';
 
