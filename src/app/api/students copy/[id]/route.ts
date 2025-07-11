@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { readData, writeData } from '@/lib/students-store';
+import { readData, writeData } from '@/utils';
 
 export async function GET(
-    req: NextRequest,
+    request: NextRequest,
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
+
     const students = readData();
-    const student = students.find((s) => s.id === id);
+    const student = students.find((s: any) => s.id === id);
 
     if (!student) {
         return NextResponse.json({ message: 'Not found' }, { status: 404 });
@@ -22,9 +23,10 @@ export async function PUT(
 ) {
     const { id } = await params;
     const body = await req.json();
-    const students = readData();
 
-    const index = students.findIndex((s) => s.id === id);
+    const students = readData();
+    const index = students.findIndex((s: any) => s.id === id);
+
     if (index === -1) {
         return NextResponse.json({ message: 'Not found' }, { status: 404 });
     }
@@ -40,9 +42,10 @@ export async function DELETE(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
-    const students = readData();
 
-    const index = students.findIndex((s) => s.id === id);
+    const students = readData();
+    const index = students.findIndex((s: any) => s.id === id);
+
     if (index === -1) {
         return NextResponse.json({ message: 'Not found' }, { status: 404 });
     }
