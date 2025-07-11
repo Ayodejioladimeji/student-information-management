@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { Mail, Key, Eye, EyeOff, Lock } from 'lucide-react';
 import Image from 'next/image';
 import cogoToast from '@successtar/cogo-toast';
+import { signIn } from 'next-auth/react';
+import { ButtonLoader, Loader } from '@/components/ui/loadder';
 
 const loginSchema = z.object({
     email: z.string().email('Enter a valid email'),
@@ -35,26 +37,25 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            
-            loginSchema.parse(loginData);
 
-            
+            const res = await signIn('credentials', {
+                email: loginData.email,
+                password: loginData.password,
+                redirect: false,
+            });
+
+            if (res?.error) {
+                cogoToast.error("Invalid email or password");
+                setLoading(false);
+                return;
+              }
             cogoToast.success('Login successful!');
-            // router.push('/students');
+            router.push('/dashboard');
+            
+
         } catch (error) {
-            if (error instanceof z.ZodError) {
-                const fieldErrors: Partial<Record<keyof LoginFormData, string>> = {};
+            cogoToast.error('An unexpected error occurred.');
 
-                for (const err of error.errors) {
-                    const field = err.path[0] as keyof LoginFormData;
-                    if (field) fieldErrors[field] = err.message;
-                }
-
-                setErrors(fieldErrors);
-            } else {
-                console.error(error);
-                cogoToast.error('An unexpected error occurred.');
-            }
         } finally {
             setLoading(false);
         }
@@ -88,7 +89,7 @@ export default function LoginPage() {
                     </h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        
+
                         <div className="mb-4">
                             <label htmlFor="email" className="sr-only">Email address</label>
 
@@ -149,9 +150,10 @@ export default function LoginPage() {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full flex justify-center py-3 px-4 rounded-md shadow-sm text-white bg-gray-800 hover:bg-red-500 mt-4 cursor-pointer"
+                            className="w-full flex items-center gap-2 justify-center py-3 px-4 rounded-md shadow-sm text-white bg-gray-800 hover:bg-red-500 mt-4 cursor-pointer"
                         >
-                            {loading ? "Signing in..." : "Sign in"}
+                            Sign in
+                            {loading && <ButtonLoader/>}
                         </button>
                     </form>
 
