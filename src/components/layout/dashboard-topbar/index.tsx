@@ -1,6 +1,7 @@
 'use client';
 
 import { Menu, X } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { Dispatch, SetStateAction } from "react";
 
@@ -10,8 +11,8 @@ interface SidebarProps {
 }
 
 
-export default function DashboardTopBar({ openSidebar, setOpenSidebar }: SidebarProps) {
-     
+export default function DashboardTopBar({setOpenSidebar }: SidebarProps) {
+      const { data: session } = useSession();
 
     return (
         <header className="w-full sticky top-0 bg-white border-b border-gray-300">
@@ -21,7 +22,7 @@ export default function DashboardTopBar({ openSidebar, setOpenSidebar }: Sidebar
                 <div className="flex items-center gap-2">
                     <div className="size-10 border rounded-full">
                         <Image
-                            src="/assets/miva-logo.png"
+                            src="/assets/user.jpg"
                             alt="miva logo"
                             width={100}
                             height={100}
@@ -29,7 +30,11 @@ export default function DashboardTopBar({ openSidebar, setOpenSidebar }: Sidebar
                             priority
                         />
                     </div>
-                    <p>Admin</p>
+
+                    <div>
+                        {session?.user?.name && <p className="text-sm">{session.user.name}</p>}
+                        {session?.user?.email && <p className="text-sm">{session.user.email}</p>}
+                    </div>
                 </div>
             </div>
         </header>
