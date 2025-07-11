@@ -1,12 +1,21 @@
 [
   {
+    "id": "1752195290273",
+    "name": "Mayowa Adeosun",
+    "email": "mayowa@mailinator.com",
+    "registrationNumber": "2049234234234",
+    "major": "Mathematics",
+    "dateOfBirth": "2025-07-31",
+    "gpa": 1.8
+  },
+  {
     "id": "1752151678351",
     "name": "Aderemi Alobami",
     "email": "aderemi@mailinator.com",
     "registrationNumber": "4543325435435",
     "major": "Psychology",
-    "dateOfBirth": "2025-07-25",
-    "gpa": 3.8
+    "dateOfBirth": "2025-07-31",
+    "gpa": 3.9
   },
   {
     "id": "1752112094585",

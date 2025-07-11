@@ -158,7 +158,7 @@ export default function LoginPage() {
                     </form>
 
                     <p className="text-sm text-center text-gray-400 mt-4">
-                        Login info: <span className="font-bold">user@example.com - user@1234</span>
+                        Login info: <span className="font-bold">john@example.com - 123456</span>
                     </p>
                 </div>
             </div>

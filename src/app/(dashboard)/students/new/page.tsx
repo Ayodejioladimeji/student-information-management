@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import cogoToast from '@successtar/cogo-toast';
-import { ArrowLeft, Save, X } from 'lucide-react';
+import { ArrowLeft, CalendarDays, Save, X } from 'lucide-react';
 import { createStudent } from '@/services/student-service';
 
 const formSchema = z.object({
@@ -120,7 +120,7 @@ export default function AddStudentPage() {
                         {...register('major')}
                         className="w-full p-3 rounded border border-gray-300 bg-white"
                     >
-                        <option value="">Select a major</option>
+                        <option value="">Select course</option>
                         {majors.map((major, i) => (
                             <option key={i} value={major}>
                                 {major}
@@ -135,11 +135,14 @@ export default function AddStudentPage() {
                     <label className="block mb-1 font-medium">
                         Date of Birth <span className="text-red-500">*</span>
                     </label>
-                    <input
-                        type="date"
-                        {...register('dateOfBirth')}
-                        className="w-full p-3 rounded border border-gray-300"
-                    />
+                    <label className="relative w-full block">
+                        <input
+                            type="date"
+                            {...register('dateOfBirth')}
+                            className="w-full p-3 rounded border border-gray-300 appearance-none"
+                        />
+                        <CalendarDays className="w-5 h-5 text-gray-500 absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
+                    </label>
                     {errors.dateOfBirth && <p className="text-red-500 text-sm mt-1">{errors.dateOfBirth}</p>}
                 </div>
 
