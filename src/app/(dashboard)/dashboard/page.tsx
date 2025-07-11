@@ -8,6 +8,7 @@ import { Student } from '../../../../types/student';
 import { getAllStudents } from '@/services/student-service';
 import { Loader } from '@/components/ui/loadder';
 import { filterStudents } from '@/utils/filter';
+import { calculateAverageCGPA } from '@/utils/utils';
 
 
 export default function Dashboard() {
@@ -52,7 +53,7 @@ export default function Dashboard() {
                         <span>Total Students</span>
                         <User className="w-4 h-4" />
                     </div>
-                    <h2 className="text-2xl font-bold">0</h2>
+                    <h2 className="text-2xl font-bold">{students.length || 0}</h2>
                 </div>
 
                 <div className="border border-gray-300 p-4 py-7 rounded-lg space-y-2">
@@ -68,7 +69,7 @@ export default function Dashboard() {
                         <span>Average GPA</span>
                         <TrendingUp className="w-4 h-4" />
                     </div>
-                    <h2 className="text-2xl font-bold">0.00</h2>
+                    <h2 className="text-2xl font-bold">{calculateAverageCGPA(students)}</h2>
                 </div>
 
                 <div className="border border-gray-300 p-4 py-7 rounded-lg space-y-2">
