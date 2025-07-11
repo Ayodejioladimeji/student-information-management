@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { readData, writeData } from '@/utils';
 
 export async function GET(
-    request: Request,
-    context: { params: { id: string } }
-): Promise<Response> {
-    const { id } = context.params;
+    request: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
 
     const students = readData();
     const student = students.find((s: any) => s.id === id);
@@ -18,11 +18,11 @@ export async function GET(
 }
 
 export async function PUT(
-    request: Request,
-    context: { params: { id: string } }
-): Promise<Response> {
-    const { id } = context.params;
-    const body = await request.json();
+    req: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
+    const body = await req.json();
 
     const students = readData();
     const index = students.findIndex((s: any) => s.id === id);
@@ -38,10 +38,10 @@ export async function PUT(
 }
 
 export async function DELETE(
-    request: Request,
-    context: { params: { id: string } }
-): Promise<Response> {
-    const { id } = context.params;
+    req: NextRequest,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    const { id } = await params;
 
     const students = readData();
     const index = students.findIndex((s: any) => s.id === id);
