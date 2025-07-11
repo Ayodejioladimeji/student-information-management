@@ -71,7 +71,7 @@ export default function LoginPage() {
                 </h1>
             </div>
 
-            <div className="w-full max-w-md py-8 px-8 -mt-20 bg-white shadow-lg rounded-lg">
+            <div className="w-full max-w-md py-8 px-4 md:px-8 -mt-20 bg-white shadow-lg rounded-lg">
                 <div className="space-y-6">
 
                     <div className="mb-8 flex justify-center">
